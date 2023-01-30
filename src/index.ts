@@ -1,8 +1,9 @@
 import { Choice } from 'inkjs/engine/Choice';
 import { Story } from 'inkjs/engine/Story';
-import story_data from '../static/data/the_intercept.json';
+// import story_data from '../static/data/the_intercept.json';
+import story_data from '../static/data/littimer.json';
 // @ts-ignore
-import * as images from '../static/img/dynamic-img/*.png';
+// import * as images from '../static/img/dynamic-img/*.png';
 import gsap from 'gsap';
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { GameAudio } from './audio';
@@ -46,7 +47,7 @@ class Game {
 
     async add_text(text: string) {
         let prev_paragraph = this.text_display.lastChild;
-        gsap.to(prev_paragraph, { autoAlpha: 0.7, duration: 0.3 });
+        gsap.to(prev_paragraph, { autoAlpha: 0.7, duration: 2 });
 
         let paragraph = document.createElement("p");
         // Careful here! Safe for now, because the text can only come from our own story
@@ -54,14 +55,15 @@ class Game {
         // for all kinds of fun effects
         paragraph.innerHTML = text;
         this.text_display.appendChild(paragraph);
-        await gsap.fromTo(paragraph, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 });
-        gsap.to(this.text_display, { scrollTo: 'max', duration: 0.5 });
+        await gsap.fromTo(paragraph, { autoAlpha: 0 }, { autoAlpha: 1, duration: 2 });
+        gsap.to(this.text_display, { scrollTo: 'max', duration: 2 });
     }
 
     async add_choices(choices: Choice[]) {
         for (let choice of choices) {
             let button = document.createElement("button");
             button.innerText = choice.text;
+            addButtonInteractionSounds(button)
             button.addEventListener("click", () => {
                 this.story.ChooseChoiceIndex(choice.index);
                 this.continue_until_choice();
@@ -93,6 +95,34 @@ let play_popup = document.querySelector("#play-popup")!;
 let play_popup_button = play_popup.querySelector("button")!;
 play_popup_button.addEventListener("click", () => {
     gsap.to(play_popup, { autoAlpha: 0, duration: 0.5 });
+
+    gameAudio.play('amb-loop-1', true)
+
 });
 
-game.add_image('LJS');
+// game.add_image('LJS');
+
+
+let gameAudio = new GameAudio();
+gameAudio.preload()
+// gameAudio.load_file('chime-1')
+// gameAudio.load_file('amb-loop-1')
+
+
+function addButtonInteractionSounds(button: HTMLButtonElement) {
+    // for (const button of buttons) {
+    button.addEventListener('click', e => {
+        gameAudio.play('button-click-2', false)
+    })
+    button.addEventListener('mouseenter', e => {
+        gameAudio.play('button-hover-1', false)
+    })
+    // }
+}
+
+// const buttons = document.getElementsByTagName('button')
+
+const specialButton = document.querySelector('button.special-btn')
+specialButton.addEventListener('click', e => {
+    gameAudio.play('chime-1', false)
+})

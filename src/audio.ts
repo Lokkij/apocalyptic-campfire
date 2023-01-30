@@ -1,5 +1,5 @@
 // @ts-ignore
-import * as audio_files from 'url:../static/audio/**/*.m4a';
+import * as audio_files from 'url:../static/audio/*.m4a';
 
 export class GameAudio {
     private context: AudioContext;
@@ -42,7 +42,7 @@ export class GameAudio {
     async preload() {
         await Promise.all([
             // TODO: add sound files here
-            this.load_file('button-click-1'),
+            this.load_file('button-click-2'),
             this.load_file('button-hover-1'),
             this.load_file('chime-1'),
             this.load_file('short-chime-1'),
@@ -50,9 +50,11 @@ export class GameAudio {
             this.load_file('short-chime-3'),
             this.load_file('short-chime-4'),
 
+            this.load_file('amb-loop-1'),
+            this.load_file('amb-loop-2'),
+            this.load_file('amb-loop-3'),
+
             this.load_file('ben-song-waterways'),
-            // this.load_file("ping"),
-            // this.load_file("click"),
         ]);
     }
 }
